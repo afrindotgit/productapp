@@ -18,12 +18,6 @@ public class Product {
 	@ManyToOne
 	private Category categoryId;
 
-	@Override
-	public String toString() {
-		return "Product [productId=" + productId + ", productName=" + productName + ", price=" + price + ", rating="
-				+ rating + ", description=" + description + ", categoryId=" + categoryId + "]";
-	}
-
 	public Long getProductId() {
 		return productId;
 	}
@@ -70,6 +64,12 @@ public class Product {
 
 	public void setCategoryId(Category categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", productName=" + productName + ", price=" + price + ", rating="
+				+ rating + ", description=" + description + ", categoryId=" + categoryId + "]";
 	}
 
 }
