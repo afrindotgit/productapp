@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ing.product.dto.CategoryInterfaceResponseDto;
+import com.ing.productapp.dto.CategoryInterfaceResponseDto;
+import com.ing.productapp.dto.CategoryResponseDto;
 import com.ing.productapp.service.CategoryService;
 
 @RestController
@@ -17,9 +18,8 @@ public class CategoryController {
 	CategoryService categoryService;
 	
 	@GetMapping("/categories")
-	public List<CategoryInterfaceResponseDto> viewCategories(@PathVariable("category_id") Long category_id) {
-		List<CategoryInterfaceResponseDto> listCategory = categoryService.viewCategories();
-		return listCategory;
+	public CategoryResponseDto viewCategories() {
+		return categoryService.viewCategories();
 	}
 	
 	

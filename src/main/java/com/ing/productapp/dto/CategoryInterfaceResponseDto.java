@@ -1,4 +1,4 @@
-package com.ing.product.dto;
+package com.ing.productapp.dto;
 
 public interface CategoryInterfaceResponseDto {
 	Long getCategoryId();

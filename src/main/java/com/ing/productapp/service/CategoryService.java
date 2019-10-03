@@ -2,11 +2,11 @@ package com.ing.productapp.service;
 
 import java.util.List;
 
-import com.ing.product.dto.CategoryInterfaceResponseDto;
+import com.ing.productapp.dto.CategoryResponseDto;
 
 public interface CategoryService {
 
-	List<CategoryInterfaceResponseDto> viewCategories();
+	CategoryResponseDto viewCategories();
 
 	
 
