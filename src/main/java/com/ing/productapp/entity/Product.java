@@ -15,15 +15,8 @@ public class Product {
 	private Double price;
 	private Double rating;
 	private String description;
-
-	@Override
-	public String toString() {
-		return "Product [productId=" + productId + ", productName=" + productName + ", price=" + price + ", rating="
-				+ rating + ", description=" + description + ", categoryId=" + categoryId + "]";
-	}
-
 	@ManyToOne
-	private Long categoryId;
+	private Category categoryId;
 
 	public Long getProductId() {
 		return productId;
@@ -65,12 +58,19 @@ public class Product {
 		this.description = description;
 	}
 
-	public Long getCategoryId() {
+
+	public Category getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(Long categoryId) {
+	public void setCategoryId(Category categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", productName=" + productName + ", price=" + price + ", rating="
+				+ rating + ", description=" + description + ", categoryId=" + categoryId + "]";
 	}
 
 }
