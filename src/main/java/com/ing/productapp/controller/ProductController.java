@@ -20,8 +20,7 @@ public class ProductController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
-	private ProductService productService;
-
+	ProductService productService;
 	@PostMapping("/registration")
 	public ResponseEntity<ProductResponseDTO> upload(@RequestBody ProductRequestDTO productRequestDTO) {
 		LOGGER.info("Inside Method upload");
