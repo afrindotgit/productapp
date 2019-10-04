@@ -34,7 +34,7 @@ public class ProductControllerTest {
 
 	@Test
 	public void testView() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/products/{customerId}", 19L)
+		mockMvc.perform(MockMvcRequestBuilders.get("/products/{productId}", 19L)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
