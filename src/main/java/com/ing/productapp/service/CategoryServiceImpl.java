@@ -19,6 +19,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public CategoryResponseDto viewCategories() {
 		
 			List<Category> categories=categoryRepository.findAll();
+			
 			CategoryResponseDto categoryResponseDto=new CategoryResponseDto();
 			categoryResponseDto.setCategory(categories);
 			categoryResponseDto.setMessage("Successfull");

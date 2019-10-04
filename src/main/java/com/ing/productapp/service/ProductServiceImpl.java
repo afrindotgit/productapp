@@ -1,12 +1,10 @@
 package com.ing.productapp.service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
@@ -29,7 +27,6 @@ import com.ing.productapp.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class ProductServiceImpl implements ProductService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
@@ -51,7 +48,8 @@ public class ProductServiceImpl implements ProductService {
         	workbook = new XSSFWorkbook(inputFile.getInputStream());
         	sheet = workbook.getSheetAt(0);
         	Iterator<Row> rowIterator = sheet.iterator();
-        	Row headerRow= rowIterator.next();
+        	@SuppressWarnings("unused")
+			Row headerRow= rowIterator.next();
         	
         	while (rowIterator.hasNext()) {
         		Row row = rowIterator.next();

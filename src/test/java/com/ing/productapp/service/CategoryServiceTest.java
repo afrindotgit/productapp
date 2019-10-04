@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 
@@ -29,18 +30,15 @@ public class CategoryServiceTest {
 	
 	CategoryResponseDto categoryResponseDto;
 	
+	List<Category> categoryList = new ArrayList<Category>();
+	
 	@Before
 	public void setup() {
 		category = new Category();
 		category.setCategoryId(1L);
 		category.setCategoryName("footwear");
+		categoryList.add(category);
 		
-		categoryResponseDto=new CategoryResponseDto();
-		categoryResponseDto.setMessage("success");
-		categoryResponseDto.setStatusCode(201);
-		List<Category> category = new ArrayList<Category>();
-		
-		categoryResponseDto.setCategory(category);
 	}
 		
 
@@ -48,7 +46,8 @@ public class CategoryServiceTest {
 		@Test
 		public void testViewCategories() {
 			
-			CategoryResponseDto categoryResponseDto = categoryServiceImpl.viewCategories();
+			Mockito.when(categoryRepository.findAll()).thenReturn(categoryList);
+			CategoryResponseDto categoryResponseDto=categoryServiceImpl.viewCategories();
 			
 			
 	}
