@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.io.Files;
 import com.ing.productapp.controller.ProductController;
 import com.ing.productapp.dto.CommonResponseDTO;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
