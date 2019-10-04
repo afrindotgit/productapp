@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.io.Files;
 import com.ing.productapp.controller.ProductController;
 import com.ing.productapp.dto.CommonResponseDTO;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
@@ -37,12 +38,13 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public CommonResponseDTO upload(MultipartFile inputFile) throws IOException {
+		
 		CommonResponseDTO response = new CommonResponseDTO();
         XSSFSheet sheet = null;
         XSSFWorkbook workbook = null;
         
         try {
-        	List<Product> products = new ArrayList<>();
+        	List<Product> productList = new ArrayList<>();
         	workbook = new XSSFWorkbook(inputFile.getInputStream());
         	sheet = workbook.getSheetAt(0);
         	Iterator<Row> rowIterator = sheet.iterator();
@@ -58,7 +60,6 @@ public class ProductServiceImpl implements ProductService {
         		
         		Cell cell = cellIterator.next();
                 Product product = new Product();
-                Category category = new Category();
                 
                 String categoryName = cell.getStringCellValue();
                 
@@ -72,32 +73,22 @@ public class ProductServiceImpl implements ProductService {
                 }
                 if (cellIterator.hasNext()) {
                     Cell cell3 = cellIterator.next();
-                    rating = cell3.getNumericCellValue();
+                    price = cell3.getNumericCellValue();
                 }
                 if (cellIterator.hasNext()) {
                     Cell cell4 = cellIterator.next();
-                    price = cell4.getNumericCellValue();
+                    rating = cell4.getNumericCellValue();
                 }
                 
-                category.setCategoryName(categoryName);
+  
+                Category categoryResponse=isCategory(categoryName);
                 
-                Category categoryProduct1=categoryRepository.findByCategoryName(categoryName);
-                
-                Category categoryResponse;
-                
-                if(categoryProduct1 == null) {
-                	categoryResponse=categoryRepository.save(category);
-                }
-                else {
-                	categoryResponse=categoryProduct1;
-                }
-                
-                Product productRepoResponse=productRepository.findByProductName(productName);
+                Product isproduct=productRepository.findByProductName(productName);
                 //update
-                if(productRepoResponse != null) {
-                	if (productRepoResponse.getDescription().compareToIgnoreCase(description) != 0) {
-                		productRepoResponse.setDescription(description);
-                		products.add(productRepoResponse);
+                if(isproduct != null) {
+                	if (isproduct.getDescription().compareToIgnoreCase(description) != 0) {
+                		isproduct.setDescription(description);
+                		productList.add(isproduct);
                 	}
                 }
                 //create
@@ -105,15 +96,15 @@ public class ProductServiceImpl implements ProductService {
                 	product.setCategoryId(categoryResponse);
                     product.setDescription(description);
                     product.setProductName(productName);
-                    product.setRating(rating);
                     product.setPrice(price);
-                    products.add(product);
+                    product.setRating(rating);
+                    productList.add(product);
                 }
 
                 response.setMessage("success");
                 response.setStatusCode(200);
         	}
-        	 productRepository.saveAll(products);
+        	 productRepository.saveAll(productList);
                 
         	}
         	catch (Exception e) {
@@ -126,7 +117,23 @@ public class ProductServiceImpl implements ProductService {
 
 		return response;
 	}
-
+	
+	public Category isCategory(String categoryName) {
+		
+		Category categoryResponse;
+		Category category = new Category();
+		Category isCategory=categoryRepository.findByCategoryName(categoryName);
+		
+        if(isCategory == null) {
+        	category.setCategoryName(categoryName);
+        	categoryResponse=categoryRepository.save(category);
+        }
+        else {
+        	categoryResponse=isCategory;
+        }
+        
+        return categoryResponse;
+	}
 	@Override
 	public ProductResponseDTO viewProducts(Long categoryId) {
 		Category category = new Category();
