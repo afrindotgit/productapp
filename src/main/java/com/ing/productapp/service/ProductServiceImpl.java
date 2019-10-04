@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 	
 	@Autowired
-	private ProductRepository productRepository;
+	ProductRepository productRepository;
 
 	@Autowired
 	CategoryRepository categoryRepository;
@@ -85,7 +85,6 @@ public class ProductServiceImpl implements ProductService {
                 Category categoryProduct1=categoryRepository.findByCategoryName(categoryName);
                 
                 Category categoryProduct3;
-                
                 if(categoryProduct1 == null) {
                 	categoryProduct3=categoryRepository.save(category);
                 }
@@ -109,6 +108,9 @@ public class ProductServiceImpl implements ProductService {
         	catch (Exception e) {
 
         		LOGGER.error(this.getClass().getName() + " loadDataToDB : " + e.getMessage());
+        		
+        		response.setMessage("Failed");
+                response.setStatusCode(404);
 
         	}
 
