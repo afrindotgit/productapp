@@ -2,9 +2,11 @@ package com.ing.productapp.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ing.productapp.controller.ProductController;
+import com.ing.productapp.dto.CommonResponseDTO;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
 import com.ing.productapp.dto.ProductInterfaceResponseDTO;
 import com.ing.productapp.dto.ProductResponseDTO;
@@ -39,17 +42,18 @@ public class ProductServiceImpl implements ProductService {
 	CategoryRepository categoryRepository;
 
 	@Override
-	public ProductResponseDTO upload(MultipartFile inputFile) throws IOException {
-		ProductResponseDTO response = new ProductResponseDTO();
-        FileInputStream input = null;
+	public CommonResponseDTO upload(MultipartFile inputFile) throws IOException {
+		CommonResponseDTO response = new CommonResponseDTO();
         XSSFSheet sheet = null;
         XSSFWorkbook workbook = null;
         
         try {
+        	List<Product> products = new ArrayList<>();
         	workbook = new XSSFWorkbook(inputFile.getInputStream());
         	sheet = workbook.getSheetAt(0);
         	Iterator<Row> rowIterator = sheet.iterator();
         	Row headerRow= rowIterator.next();
+        	
         	while (rowIterator.hasNext()) {
         		Row row = rowIterator.next();
         		Iterator<Cell> cellIterator = row.cellIterator();
@@ -80,29 +84,42 @@ public class ProductServiceImpl implements ProductService {
                     Cell cell4 = cellIterator.next();
                     price = cell4.getNumericCellValue();
                 }
+                
                 category.setCategoryName(categoryName);
                 
                 Category categoryProduct1=categoryRepository.findByCategoryName(categoryName);
                 
-                Category categoryProduct3;
+                Category categoryResponse;
+                
                 if(categoryProduct1 == null) {
-                	categoryProduct3=categoryRepository.save(category);
+                	categoryResponse=categoryRepository.save(category);
                 }
                 else {
-                	categoryProduct3=categoryProduct1;
+                	categoryResponse=categoryProduct1;
                 }
                 
-                product.setCategoryId(categoryProduct3);
-                product.setDescription(description);
-                product.setProductName(productName);
-                product.setRating(rating);
-                product.setPrice(price);
-                
-                productRepository.save(product);
+                Product productRepoResponse=productRepository.findByProductName(productName);
+                //update
+                if(productRepoResponse != null) {
+                	if (productRepoResponse.getDescription().compareToIgnoreCase(description) != 0) {
+                		productRepoResponse.setDescription(description);
+                		products.add(productRepoResponse);
+                	}
+                }
+                //create
+                else {
+                	product.setCategoryId(categoryResponse);
+                    product.setDescription(description);
+                    product.setProductName(productName);
+                    product.setRating(rating);
+                    product.setPrice(price);
+                    products.add(product);
+                }
 
                 response.setMessage("success");
                 response.setStatusCode(200);
         	}
+        	 productRepository.saveAll(products);
                 
         	}
         	catch (Exception e) {

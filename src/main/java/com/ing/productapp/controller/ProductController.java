@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ing.productapp.dto.CommonResponseDTO;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
 import com.ing.productapp.dto.ProductResponseDTO;
 import com.ing.productapp.service.ProductService;
@@ -30,11 +31,9 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping("/products")
-	public ResponseEntity<ProductResponseDTO> upload(@RequestParam("file") MultipartFile inputFile) throws IOException {
+	public CommonResponseDTO upload(@RequestParam("file") MultipartFile inputFile) throws IOException {
 		LOGGER.info("Inside Method upload");
-
-		ProductResponseDTO customerResponseDTO = productService.upload(inputFile);
-		return new ResponseEntity<>(customerResponseDTO, HttpStatus.CREATED);
+		return productService.upload(inputFile);
 	}
 
 	@GetMapping("/categories/{categoryId}/products")
