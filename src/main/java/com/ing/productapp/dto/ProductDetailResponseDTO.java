@@ -1,5 +1,7 @@
 package com.ing.productapp.dto;
 
+import com.ing.productapp.entity.Category;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,5 +18,6 @@ public class ProductDetailResponseDTO {
 	private String description;
 	private String message;
 	private Integer statusCode;
+	private Category category;
 
 }

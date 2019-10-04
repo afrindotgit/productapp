@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ing.productapp.dto.CommonResponseDTO;
@@ -49,13 +46,12 @@ public class ProductServiceTest {
 	Category category;
 	Product product;
 
-	ProductDetailResponseDTO productDetailResponseDTO;
-	ProductResponseDTO productResponseDTO;
-
+	List<ProductInterfaceResponseDTO> resultList = new ArrayList<ProductInterfaceResponseDTO>();
 	ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
-	ProductInterfaceResponseDTO prodDetResponseDto = factory.createProjection(ProductInterfaceResponseDTO.class);
+	ProductInterfaceResponseDTO productInterfaceResponseDTO = factory.createProjection(ProductInterfaceResponseDTO.class);
+	
 	List<Product> productList = new ArrayList<>();
-	List<ProductInterfaceResponseDTO> resList = new ArrayList<>();
+	
 
 	@Before(value = "")
 	public void setup() {
@@ -70,15 +66,18 @@ public class ProductServiceTest {
 		product.setProductName("Platinum Card");
 		product.setRating(5.5);
 		
-		
 		productList.add(product);
+		
+		productInterfaceResponseDTO.setProductId(1L);
+		productInterfaceResponseDTO.setProductName("Platinum Card");
 
+		resultList.add(productInterfaceResponseDTO);
 	}
 
 	@Test
 	public void testViewProducts() {
 
-		Mockito.when(productRepository.findAllByCategoryId(Mockito.any())).thenReturn(resList);
+		Mockito.when(productRepository.findAllByCategoryId(Mockito.any())).thenReturn(resultList);
 
 		ProductResponseDTO resDTO = productServiceImpl.viewProducts(1L);
 
@@ -90,8 +89,6 @@ public class ProductServiceTest {
 	public void testViewDetails() {
 
 		// Testcase2
-		productDetailResponseDTO = new ProductDetailResponseDTO();
-
 		product = new Product();
 		product.setDescription("Good");
 		product.setPrice(100.00);
@@ -101,15 +98,7 @@ public class ProductServiceTest {
 
 		Mockito.when(productRepository.findAllByProductId(Mockito.anyLong())).thenReturn(product);
 		ProductDetailResponseDTO productDetResDto = productServiceImpl.viewDetails(product.getProductId());
-
-		productDetResDto.setDescription(product.getDescription());
-		productDetResDto.setPrice(product.getPrice());
-		productDetResDto.setProductName(product.getProductName());
-		productDetResDto.setProductId(product.getProductId());
-		productDetResDto.setRating(product.getRating());
-		productDetResDto.setMessage("Successful");
-		productDetResDto.setStatusCode(201);
-		assertEquals("Successful", productDetResDto.getMessage());
+		assertEquals(Long.valueOf(1L), productDetResDto.getProductId());
 	}
 	
 	@Test

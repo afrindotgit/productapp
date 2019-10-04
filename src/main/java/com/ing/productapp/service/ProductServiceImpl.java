@@ -148,6 +148,7 @@ public class ProductServiceImpl implements ProductService {
 
 		org.springframework.beans.BeanUtils.copyProperties(product, productDetailResponseDTO);
 
+		productDetailResponseDTO.setCategory(product.getCategoryId());
 		productDetailResponseDTO.setMessage("Successful");
 		productDetailResponseDTO.setStatusCode(201);
 
