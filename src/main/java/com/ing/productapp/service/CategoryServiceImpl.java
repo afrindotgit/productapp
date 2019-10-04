@@ -3,6 +3,7 @@ package com.ing.productapp.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ing.productapp.dto.CategoryResponseDto;
@@ -19,10 +20,9 @@ public class CategoryServiceImpl implements CategoryService{
 	public CategoryResponseDto viewCategories() {
 		
 			List<Category> categories=categoryRepository.findAll();
-			
 			CategoryResponseDto categoryResponseDto=new CategoryResponseDto();
-			categoryResponseDto.setCategory(categories);
-			categoryResponseDto.setMessage("Successfull");
+			categoryResponseDto.setData(categories);
+			categoryResponseDto.setMessage("SUCCESSFUL");
 			categoryResponseDto.setStatusCode(201);
 			
 	    return categoryResponseDto;

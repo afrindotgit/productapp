@@ -2,6 +2,12 @@ package com.ing.productapp.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +18,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ing.productapp.dto.CommonResponseDTO;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
 import com.ing.productapp.dto.ProductInterfaceResponseDTO;
 import com.ing.productapp.dto.ProductResponseDTO;
@@ -42,6 +54,7 @@ public class ProductServiceTest {
 
 	ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 	ProductInterfaceResponseDTO prodDetResponseDto = factory.createProjection(ProductInterfaceResponseDTO.class);
+	List<Product> productList = new ArrayList<>();
 	List<ProductInterfaceResponseDTO> resList = new ArrayList<>();
 
 	@Before(value = "")
@@ -49,15 +62,16 @@ public class ProductServiceTest {
 		category = new Category();
 		category.setCategoryId(1L);
 		category.setCategoryName("clothing");
-
-		// Testcase1
-		productResponseDTO = new ProductResponseDTO();
-		productResponseDTO.setMessage("success");
-		productResponseDTO.setStatusCode(1);
-		productResponseDTO.setProductInterfaceResponseDto(resList);
-
-		prodDetResponseDto.setProductId(1L);
-		prodDetResponseDto.setProductName("Savings");
+		
+		product.setCategoryId(category);
+		product.setDescription("Platinum Card");
+		product.setPrice(100.00);
+		product.setProductId(1L);
+		product.setProductName("Platinum Card");
+		product.setRating(5.5);
+		
+		
+		productList.add(product);
 
 	}
 
@@ -96,6 +110,20 @@ public class ProductServiceTest {
 		productDetResDto.setMessage("Successful");
 		productDetResDto.setStatusCode(201);
 		assertEquals("Successful", productDetResDto.getMessage());
+	}
+	
+	@Test
+	public void testUpload() throws FileNotFoundException, IOException {
+		
+		Resource resource = new ClassPathResource("ingprd_data.xlsx");
+		File file = resource.getFile();
+		MultipartFile multipartFile = new MockMultipartFile("file", new FileInputStream(file));
+		Mockito.when(categoryRepository.findByCategoryName(Mockito.any())).thenReturn(null);
+		Mockito.when(categoryRepository.save(Mockito.any())).thenReturn(category);
+		Mockito.when(productRepository.findByProductName(Mockito.any())).thenReturn(null);
+		Mockito.when(productRepository.saveAll(Mockito.any())).thenReturn(productList);
+		CommonResponseDTO commonResponseDTO=productServiceImpl.upload(multipartFile);
+		assertEquals("success", commonResponseDTO.getMessage());
 	}
 
 }

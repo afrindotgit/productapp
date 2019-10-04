@@ -10,11 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
+import org.springframework.util.Assert;
 
 import com.ing.productapp.dto.CategoryResponseDto;
 import com.ing.productapp.entity.Category;
 import com.ing.productapp.repository.CategoryRepository;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CategoryServiceTest {
@@ -36,19 +37,17 @@ public class CategoryServiceTest {
 	public void setup() {
 		category = new Category();
 		category.setCategoryId(1L);
-		category.setCategoryName("footwear");
+		category.setCategoryName("LOANS");
 		categoryList.add(category);
 		
 	}
 		
-
-
 		@Test
 		public void testViewCategories() {
 			
 			Mockito.when(categoryRepository.findAll()).thenReturn(categoryList);
 			CategoryResponseDto categoryResponseDto=categoryServiceImpl.viewCategories();
-			
+			assertEquals("SUCCESSFUL", categoryResponseDto.getMessage());
 			
 	}
 }

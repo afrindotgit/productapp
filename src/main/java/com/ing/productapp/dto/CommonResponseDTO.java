@@ -1,22 +1,16 @@
 package com.ing.productapp.dto;
 
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class CommonResponseDTO {
 
 	private String message;
 	private Integer statusCode;
-	
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public Integer getStatusCode() {
-		return statusCode;
-	}
-	public void setStatusCode(Integer statusCode) {
-		this.statusCode = statusCode;
-	}
-	
 	
 }

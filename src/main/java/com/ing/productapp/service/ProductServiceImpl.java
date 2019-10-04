@@ -24,8 +24,6 @@ import com.ing.productapp.entity.Product;
 import com.ing.productapp.repository.CategoryRepository;
 import com.ing.productapp.repository.ProductRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
 public class ProductServiceImpl implements ProductService {
 	
@@ -48,8 +46,7 @@ public class ProductServiceImpl implements ProductService {
         	workbook = new XSSFWorkbook(inputFile.getInputStream());
         	sheet = workbook.getSheetAt(0);
         	Iterator<Row> rowIterator = sheet.iterator();
-        	@SuppressWarnings("unused")
-			Row headerRow= rowIterator.next();
+			rowIterator.next();
         	
         	while (rowIterator.hasNext()) {
         		Row row = rowIterator.next();
@@ -120,9 +117,8 @@ public class ProductServiceImpl implements ProductService {
                 
         	}
         	catch (Exception e) {
-
-        		LOGGER.error(this.getClass().getName() + " loadDataToDB : " + e.getMessage());
         		
+        		LOGGER.error(this.getClass().getName(), e.getMessage());
         		response.setMessage("Failed");
                 response.setStatusCode(404);
 
@@ -152,11 +148,6 @@ public class ProductServiceImpl implements ProductService {
 
 		org.springframework.beans.BeanUtils.copyProperties(product, productDetailResponseDTO);
 
-		productDetailResponseDTO.setProductId(product.getProductId());
-		productDetailResponseDTO.setProductName(product.getProductName());
-		productDetailResponseDTO.setRating(product.getRating());
-		productDetailResponseDTO.setPrice(product.getPrice());
-		productDetailResponseDTO.setDescription(product.getDescription());
 		productDetailResponseDTO.setMessage("Successful");
 		productDetailResponseDTO.setStatusCode(201);
 
