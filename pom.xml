@@ -54,6 +54,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -74,6 +76,11 @@
            <artifactId>jacoco-maven-plugin</artifactId>
            <version>0.8.3</version>
         </dependency>
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>

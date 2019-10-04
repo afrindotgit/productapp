@@ -1,60 +1,116 @@
 package com.ing.productapp.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ing.productapp.controller.ProductController;
 import com.ing.productapp.dto.ProductDetailResponseDTO;
 import com.ing.productapp.dto.ProductInterfaceResponseDTO;
 import com.ing.productapp.dto.ProductResponseDTO;
 import com.ing.productapp.entity.Category;
 import com.ing.productapp.entity.Product;
+import com.ing.productapp.repository.CategoryRepository;
 import com.ing.productapp.repository.ProductRepository;
 
-@Service
-public class ProductServiceImpl implements ProductService {
+import lombok.extern.slf4j.Slf4j;
 
+@Service
+@Slf4j
+public class ProductServiceImpl implements ProductService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+	
 	@Autowired
 	private ProductRepository productRepository;
 
+	@Autowired
+	CategoryRepository categoryRepository;
+
 	@Override
 	public ProductResponseDTO upload(MultipartFile inputFile) throws IOException {
-		Category category = new Category();
-		Set<String> set = new HashSet<>();
+		ProductResponseDTO response = new ProductResponseDTO();
+        FileInputStream input = null;
+        XSSFSheet sheet = null;
+        XSSFWorkbook workbook = null;
+        
+        try {
+        	workbook = new XSSFWorkbook(inputFile.getInputStream());
+        	sheet = workbook.getSheetAt(0);
+        	Iterator<Row> rowIterator = sheet.iterator();
+        	Row headerRow= rowIterator.next();
+        	while (rowIterator.hasNext()) {
+        		Row row = rowIterator.next();
+        		Iterator<Cell> cellIterator = row.cellIterator();
+        		String productName = "";
+        		String description = "";
+        		Double rating = 0.0;
+        		Double price = 0.0 ;
+        		
+        		Cell cell = cellIterator.next();
+                Product product = new Product();
+                Category category = new Category();
+                
+                String categoryName = cell.getStringCellValue();
+                
+                if (cellIterator.hasNext()) {
+                	Cell cell1 = cellIterator.next();
+                    productName = cell1.getStringCellValue();
+                }
+                if (cellIterator.hasNext()) {
+                    Cell cell2 = cellIterator.next();
+                    description = cell2.getStringCellValue();
+                }
+                if (cellIterator.hasNext()) {
+                    Cell cell3 = cellIterator.next();
+                    rating = cell3.getNumericCellValue();
+                }
+                if (cellIterator.hasNext()) {
+                    Cell cell4 = cellIterator.next();
+                    price = cell4.getNumericCellValue();
+                }
+                category.setCategoryName(categoryName);
+                
+                Category categoryProduct1=categoryRepository.findByCategoryName(categoryName);
+                
+                Category categoryProduct3;
+                
+                if(categoryProduct1 == null) {
+                	categoryProduct3=categoryRepository.save(category);
+                }
+                else {
+                	categoryProduct3=categoryProduct1;
+                }
+                
+                product.setCategoryId(categoryProduct3);
+                product.setDescription(description);
+                product.setProductName(productName);
+                product.setRating(rating);
+                product.setPrice(price);
+                
+                productRepository.save(product);
 
-		if (!inputFile.isEmpty()) {
-			byte[] bytes = inputFile.getBytes();
-			String completeData = new String(bytes);
-			String[] rows = completeData.split("\r\n");
+                response.setMessage("success");
+                response.setStatusCode(200);
+        	}
+                
+        	}
+        	catch (Exception e) {
 
-			for (String row : rows) {
-				String[] columns = row.split(",");
-				String cat = columns[0].toString();
-				if (!cat.equalsIgnoreCase("Category"))
-					set.add(columns[0].toString());
-			}
+        		LOGGER.error(this.getClass().getName() + " loadDataToDB : " + e.getMessage());
 
-			/*
-			 * set.forEach(s->s);
-			 * 
-			 * productRepository.save(category);
-			 */
+        	}
 
-			System.out.println(set);
-			/*
-			 * for (String cat : columns) {
-			 * 
-			 * }
-			 */
-
-		}
-
-		return null;
+		return response;
 	}
 
 	@Override

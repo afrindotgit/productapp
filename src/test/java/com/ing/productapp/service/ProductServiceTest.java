@@ -41,8 +41,8 @@ public class ProductServiceTest {
 		productResponseDTO=new ProductResponseDTO();
 		productResponseDTO.setMessage("success");
 		productResponseDTO.setStatusCode(1);
-		List<ProductInterfaceResponseDto> productInterfaceResponseDto=new ArrayList<productInterfaceResponseDto>();
-		productResponseDTO.setProductInterfaceResponseDto(productInterfaceResponseDto);
+		//List<ProductInterfaceResponseDto> productInterfaceResponseDto=new ArrayList<productInterfaceResponseDto>();
+		//productResponseDTO.setProductInterfaceResponseDto(productInterfaceResponseDto);
 		
 		productDetailResponseDTO=new ProductDetailResponseDTO();
 		productDetailResponseDTO.setProductId(1L);
@@ -58,8 +58,8 @@ public class ProductServiceTest {
 	@Test
 	public void TestUpload()
 	{
-		Mockito.when(productRepository(Mockito.anyDouble())).thenReturn(null);
-		Mockito.when(ViewProducts.findByEmail(Mockito.anyString())).thenReturn(null);
+		//Mockito.when(productRepository(Mockito.anyDouble())).thenReturn(null);
+		//Mockito.when(ViewProducts.findByEmail(Mockito.anyString())).thenReturn(null);
 
 
 	}
